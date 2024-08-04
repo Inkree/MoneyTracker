@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 col-xs-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="content flex-grow-1">
+            <div class="header text-center d-flex justify-content-between m-3">
+                <i class="bi bi-search"></i>
+                <p class="fs-4">Your balance</p>
+                <i class="bi bi-brightness-high-fill"></i>
+
+            </div>
+            <div class="balance text-center mt-5">
+                <div class="current-balance">
+                    <h2>-900.00</h2>
+                </div>
+                <div class="text">Current Balance</div>
+            </div>
+            <div class="transactions-cards mt-5">
+                <div class="transaction-card">
+                    <div class="day text-center mt-5">
+                        Today
+                    </div>
+                    <div style="display:flex;justify-content:space-between" class="transaction mt-3 mx-4">
+                        <div class="category fw-bolder">
+                             <p><i style="color:purple" class="fa-solid fa-car mr-2 fs-4"></i> Car</p>
+                            </div>
+                        <div class="sum fw-bolder">-200</div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between" class="transaction mt-3 mx-4">
+                        <div class="category fw-bolder">
+                            <p><i style="border-color:green" class="fa-solid fa-house mr-2 fs-4"></i> House</p>
+                        </div>
+                        <div class="sum fw-bolder">-350</div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <partial name="AuthFooter" />
+    </div>
+    <div class="col-md-3">
+        <img src="~/images/icons/pets.svg" />
+    </div>
+</div>
+
+<style>
+
+    
+
+    .main-column {
+        background: #0f0c14;
+        min-height: 100vh;
+        color: #e6e1e5;
+    }
+
+    .transaction- card .day{
+        color:dimgrey;
+      
+    }
+
+    .balance .text{
+        color:dimgrey;
+    }
+
+    
+</style>

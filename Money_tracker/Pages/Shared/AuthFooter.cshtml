@@ -1,0 +1,66 @@
+﻿@page
+@model Money_tracker.Pages.Shared.AuthFooterModel
+@{
+}
+
+<footer class="footer">
+    <ul class="d-flex justify-content-around">
+        <li class="@(ViewBag.ActiveIcon == "index" ? "active" : "")">
+            <a href="/Transaction/Index">
+                <i class="bi bi-wallet2"></i>
+            </a>
+        </li>
+        <li class="@(ViewBag.ActiveIcon == "create" ? "active" : "")">
+            <a href="/Transaction/Create">
+                <i class="bi bi-plus-square"></i>
+            </a>
+        </li>
+        <li class="@(ViewBag.ActiveIcon == "statistic" ? "active" : "")">
+            <a href="/Transaction/Statistic">
+                <i class="bi bi-pie-chart"></i>
+
+            </a>
+        </li>
+    </ul>
+</footer>
+
+
+<style>
+    .footer {
+        background: #0f0c14;
+        padding: 10px 0;
+        text-align: center;
+        width: 100%;
+        border: 5px;
+        border-top: 1px solid #514f55;
+    }
+
+        .footer ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+            .footer ul li {
+                margin-right: 10px;
+            }
+
+                .footer ul li:last-child {
+                    margin-right: 0;
+                }
+
+                .footer ul li.active i {
+                    color: #E0B0FF; /* цвет для активной иконки */
+                }
+
+            .footer ul a {
+                text-decoration: none;
+                color: #514f55;
+            }
+
+            .footer ul li i {
+                font-size: 24px;
+            }
+</style>

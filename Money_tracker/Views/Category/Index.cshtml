@@ -1,0 +1,61 @@
+﻿@using Core.models;
+@model IEnumerable<Category>;
+@{
+    Layout = "_Layout";
+}
+
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 col-xs-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="content flex-grow-1">
+            <div class="header">
+                <p class="fs-4">Category</p>
+            </div>
+            <div class="search mt-5 d-flex justify-content-center">
+                <input class="form-control mx-3" />
+            </div>
+            <div class="categories mt-5 p-4">
+                @foreach(var category in Model)
+                {
+                    <div class="category">
+                        <p class="fs-5"><i style="border-color:green" class="fa-solid fa-house mr-2 fs-4"></i>@category.Name</p>
+                    </div>
+                }
+               
+                <div class="category">
+                    <p class="fs-5"><i style="border-color:green" class="fa-solid fa-car mr-2 fs-4"></i> Car</p>
+                </div>
+                <div class="category">
+                    <p class="fs-5"><i style="border-color:green" class="fa-solid fa-internet mr-2 fs-4"></i> Internet</p>
+                </div>
+            </div>
+        </div>
+        <partial name="AuthFooter" />
+    </div>
+   
+    <div class="col-md-3"></div>
+   
+</div>
+
+
+
+<style>
+
+
+
+    .main-column {
+        background: #0f0c14;
+        min-height: 100vh;
+        color: #e6e1e5;
+    }
+
+    .transaction- card .day {
+        color: dimgrey;
+    }
+
+    .balance .text {
+        color: dimgrey;
+    }
+
+</style>

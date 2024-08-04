@@ -1,0 +1,128 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 col-xs-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="content flex-grow-1">
+           <form>
+            <div class="header d-flex justify-content-center align-items-center m-3">
+                    <p class="fs-4 mb-0 ml-5 flex-grow-1 text-center">Your balance</p>
+                    <a id="btnCreate" asp-action="Create" class="ms-auto btn-hidden">Add</a>
+            </div>
+
+         <div class="form-transaction mt-5">
+            
+                    <input id="sumInput" style="text-align:right;" class="form-control mt-5 px-4 fs-3 invisible-input" placeholder="0 " />
+                 <div class="info">
+                     <hr />
+                     <div class="info-input px-5">
+                         <i class="fa fa-solid fa-tag"></i>
+                           
+                         <input id="categoryInput" class="form-control invisible-input px-5 text-center" placeholder="Add category"/>
+                            
+                     </div>
+                     <hr />
+                      <div class="info-input px-5"> 
+                          <i class="fa fa-solid fa-tag"></i>
+                          <input id="hashtagInput" class="form-control invisible-input px-5 text-center" placeholder="Add a hashtag" />
+                      </div>
+                        <hr />
+                        <div class="info-input px-5">
+                            <i class="fa fa-solid fa-tag"></i>
+                            <input id="tagInput" class="form-control invisible-input px-5 text-center" placeholder="Add a note" />
+                        </div>
+                 </div>
+            
+         </div>
+            </form>
+
+        </div>
+       
+        <partial name="AuthFooter" />
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+
+
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title mx-auto" id="categoryModalLabel">Select Category</h5>
+                <a asp-controller="Category" asp-action="Create"><i class="fa-solid fa-plus fs-5 p-2"></i></a>
+            </div>
+            <div class="modal-body">
+                <ul class="">
+                    <li class="">Category 1</li>
+                    <li class="">Category 2</li>
+                    <li class="">Category 3</li>
+                   
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        console.log("jQuery is loaded and document is ready");
+
+        $('#sumInput').on('input', function () {
+            console.log("Input event triggered");
+            var sum = $(this).val();
+            console.log("Input value: " + sum);
+            if (sum && sum != "0") {
+                $('#btnCreate').removeClass('btn-hidden');
+                console.log("Button shown");
+            } else {
+                $('#btnCreate').addClass('btn-hidden');
+                console.log("Button hidden");
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Show modal on category input click
+        $('#categoryInput').click(function () {
+            $('#categoryModal').modal('show');
+        });
+
+        // Handle category selection from modal
+        $('.list-group-item').click(function () {
+            var selectedCategory = $(this).text().trim();
+            $('#categoryInput').val(selectedCategory);
+            $('#categoryModal').modal('hide');
+        });
+    });
+</script>
+
+<style>
+    
+
+  
+
+    .info-input {
+        display: flex;
+        align-items: center;
+    }
+
+        .info-input .fa {
+            margin-right: 10px; /* Отступ между иконкой и инпутом */
+            font-size: 20px; /* Размер иконки */
+            color: #6c757d; /* Цвет иконки */
+        }
+
+
+    .btn-hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style> 
