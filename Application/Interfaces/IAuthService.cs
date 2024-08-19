@@ -10,7 +10,7 @@ namespace Application.Interfaces
 {
     public interface IAuthService
     {
-        public Task<bool> SignInAsync(SignInRequest signInRequest);
+        public Task SignInAsync(SignInRequest signInRequest);
         public Task<Result> SignUpAsync(SignUpRequest signUpRequest);
         public Task SignOutAsync();
         public Task<UserDto?> GetCurentUserAsync(ClaimsPrincipal principal);

@@ -8,6 +8,6 @@ namespace Core.models
 {
     public abstract class BaseEntity
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
     }
 }

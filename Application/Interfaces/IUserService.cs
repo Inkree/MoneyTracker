@@ -12,7 +12,7 @@ namespace Core.interfaces
     {
         Task<UserDto?> FindByIdAsync(string userId);
         Task<UserDto?> FindByEmailAsync(string email);
-        Task<string> GetUserIdAsync(ClaimsPrincipal principal);
+        string GetUserId(ClaimsPrincipal principal);
         Task<string> GetEmailAsync(ClaimsPrincipal principal);
         Task<string> GetUserNameAsync(ClaimsPrincipal principal);
         Task<string> GetPhoneNumberAsync(ClaimsPrincipal principal);

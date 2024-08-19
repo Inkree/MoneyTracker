@@ -54,8 +54,80 @@ namespace Money_tracker.Controllers
             return Challenge(properties, provider);
         }
 
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+        //{           
+        //    returnUrl = returnUrl ?? Url.Content("~/");
+
+        //    LoginViewModel loginViewModel = new LoginViewModel
+        //    {
+        //        ReturnUrl = returnUrl,
+        //        ExternalLogins = (await _authService.GetExternalAuthenticationSchemesAsync()).ToList()
+        //    };
+
+        //    if (remoteError != null)
+        //    {
+        //        ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+
+        //        return View("Login", loginViewModel);
+        //    }
+        //    var info = await _authService.GetExternalLoginInfoAsync();
+        //    if (info == null)
+        //    {
+        //        ModelState
+        //            .AddModelError(string.Empty, "Error loading external login information.");
+
+        //        return View("Login", loginViewModel);
+        //    }
+        //    var signInResult = await _authService.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: false);
+
+        //    if (signInResult == true)
+        //    {
+        //        return LocalRedirect(returnUrl);
+        //    }
+        //    else
+        //    {
+        //        var email = info.Email;
+        //        if (email != null)
+        //        {
+        //            var user = await _userService.FindByEmailAsync(email);
+
+        //            if (user == null)
+        //            {
+        //                var request = new SignUpRequest()
+        //                {
+        //                    UserName = email,
+        //                    Email = email,
+        //                };
+        //                var result = await _authService.SignUpAsync(request);
+        //                if (result.Succeeded)
+        //                {
+        //                    user = await _userService.FindByEmailAsync(email);
+        //                    await _userService.AddLoginAsync(user, info);
+        //                    await _authService.SignInAsync(new SignInRequest() { Email = user.Email});
+        //                }
+        //                return RedirectToAction("Index", "Transaction");
+        //            }
+
+        //            else
+        //            {
+        //                await _userService.AddLoginAsync(user, info);
+        //                var signInRequest = new SignInRequest() { Email = user.Email };
+        //                await _authService.SignInAsync(signInRequest);
+        //                return LocalRedirect(returnUrl);
+        //            }
+                   
+        //        }
+        //        ViewBag.ErrorTitle = $"Email claim not received from: {info.LoginProvider}";
+        //        ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
+
+        //        return View("Error");
+        //    }
+        //}
+
+        [HttpGet]
         [AllowAnonymous]
-        [HttpPost]
         public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -80,9 +152,9 @@ namespace Money_tracker.Controllers
 
                 return View("Login", loginViewModel);
             }
-            var signInResult = await _authService.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: false);
 
-            if (signInResult == true)
+            var signInResult = await _authService.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: false);
+            if (signInResult)
             {
                 return LocalRedirect(returnUrl);
             }
@@ -92,37 +164,30 @@ namespace Money_tracker.Controllers
                 if (email != null)
                 {
                     var user = await _userService.FindByEmailAsync(email);
-
-                    if (user == null)
+                    if (user == null) 
                     {
                         var request = new SignUpRequest()
                         {
                             UserName = email,
                             Email = email,
                         };
-                        var result = await _authService.SignUpAsync(request);
+                        user = new UserDto() { UserName = email, Email = email };
+                        await _authService.SignUpAsync(request);
                     }
+                    await _userService.AddLoginAsync(user, info);
+                    await _authService.SignInAsync(new SignInRequest() { Email = user.Email });
 
-                    else
-                    {
-                        await _userService.AddLoginAsync(user, info);
-                        var signInRequest = new SignInRequest() { Email = user.Email };
-                        await _authService.SignInAsync(signInRequest);
-                        return LocalRedirect(returnUrl);
-                    }
-                   
+                    return LocalRedirect(returnUrl);
                 }
-                ViewBag.ErrorTitle = $"Email claim not received from: {info.LoginProvider}";
-                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
-                return View("Error");
             }
+            return View("Error");
+
         }
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _authService.SignOutAsync();
-            return RedirectToAction("index", "home");
+            return RedirectToAction("Index", "Transaction");
         }
     }
 }

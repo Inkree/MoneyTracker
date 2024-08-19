@@ -1,6 +1,11 @@
 ﻿using Application.Interfaces;
+using Core.interfaces;
 using Core.models;
+using Infrastructure.Data.Identity.Services;
 using Microsoft.AspNetCore.Mvc;
+using Money_tracker.ViewModels;
+using System.IO;
+using System.Security.Claims;
 
 namespace Money_tracker.Controllers
 {
@@ -8,21 +13,42 @@ namespace Money_tracker.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoriesService _categoriesService;
-        public CategoryController(ICategoriesService categoriesService) 
+        private readonly IUserService _userService;
+        public CategoryController(ICategoriesService categoriesService, IUserService userService) 
         {
             _categoriesService = categoriesService;
+            _userService = userService;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var categories = _categoriesService.GetAllByUserIdAsync("20a41740-0419-49d1-a22c-891478876840");
+            var userId = _userService.GetUserId(User);
+            var categories = await _categoriesService.GetAllByUserIdAsync(userId);
             return View(categories);
         }
-        [HttpPost]
-        public IActionResult Create(Category category)
+
+        [HttpGet]
+        public IActionResult Create()
         {
-            _categoriesService.Create(category);
-            return RedirectToAction("Index");
+            string iconsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/", "icons");
+            string[] iconFiles = Directory.GetFiles(iconsFolderPath, "*.svg");
+            List<string> Icons = new List<string>();
+            foreach (string iconFile in iconFiles)
+            {              
+                Icons.Add(System.IO.File.ReadAllText(iconFile));    
+            }
+            var categoryViewModel = new CreateCategoryViewModel() { Icons = Icons };
+
+            return View(categoryViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Category category)
+        {
+            var userId = _userService.GetUserId(User);
+            category.UserId = userId;
+            await _categoriesService.CreateAsync(category);
+            return RedirectToAction("Index","Category");
         }
     }
 }

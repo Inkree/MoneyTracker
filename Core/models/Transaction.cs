@@ -13,23 +13,21 @@ namespace Core.models
             Note = string.Empty;
             CategoryId = string.Empty;
             UserId = string.Empty;
-            Category = new Category();
+       
         }
-        public Transaction(Guid Id, string note,DateOnly dateCreated, decimal ammount, Category category,string userId,string categoryId)
+        public Transaction(string note, decimal ammount,string userId,string categoryId)
         {
-            DateCreated = dateCreated;
-            Ammount = ammount;
-            Category = category;
+            Amount = ammount;
             Note = note;
             UserId = userId;
             CategoryId = categoryId;
         }
         
         public string Note { get; set; }
-        public DateOnly DateCreated { get; set; }
-        public decimal Ammount { get; set; }
+        public DateOnly? DateCreated { get; set; }
+        public decimal Amount { get; set; }
         public string CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         public string UserId { get; set; }
         public string? CreatedBy { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }

@@ -1,0 +1,272 @@
+﻿@using ViewModels;
+@using Pages.Shared;
+@model CreateCategoryViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+
+<div class="row">
+    <div class="col-lg-3 col-md-2 col-12"></div>
+    <div class="col-lg-6 col-md-8 col-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="content flex-grow-1">
+            <form asp-action="Create" asp-controller="Category" >
+                <div class="header d-flex justify-content-center align-items-center m-3">
+                    <p class="fs-4 mb-0 ml-5 flex-grow-1 text-center">Create a new category</p>
+                    <button type="submit" id="btnCreate"  class="ms-auto btn-submit btn-hidden">Create</button>
+                </div>
+
+                <div class="form-transaction">
+                    <div class="info" style="margin-top:100px">
+                        <hr />
+                        <div class="info-input px-5">
+                           Name:
+
+                            <input id="nameInput" name="Name" autocomplete="off" value="" class="form-control invisible-input px-4   required-input" />
+
+                        </div>
+                        <hr />
+                        <div class="info-input px-5">
+                            Icon:
+                            <input id="iconInput" name="SvgContent" autocomplete="off" style="color:transparent" class="form-control invisible-input px-5 required-input" />
+                            <span></span>
+                        </div>
+                        <hr />
+                        <div style="position:relative" class="info-input px-5">
+                            Color:
+                            <input id="colorInput" name="Color" autocomplete="off" style="color:transparent" value="" class="form-control invisible-input pl-5  required-input" />
+                            <span id="colorCircle" class="color-circle position-absolute"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+
+        @* <partial name="AuthFooter" /> *@
+        @await Html.PartialAsync("AuthFooter",new AuthFooterModel())
+    </div>
+    <div class="col-lg-3 col-md-2 col-12"></div>
+</div>
+
+
+
+<div class="modal fade" id="iconModal" tabindex="-1" role="dialog" aria-labelledby="iconModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="background:#17141f!important">
+            <div class="modal-header">
+                <h5 class="modal-title mx-auto" style="color:#e6e2e9" id="iconModalLabel">Select Icon</h5>
+                <button type="button" class="btn-close m-0 custom-btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                
+            </div>
+            <div class="modal-body">
+                <div class="icon-container">
+                @foreach(var icon in Model.Icons)
+                {
+                        <div class="icon-item">
+                             @Html.Raw(icon)
+                        </div>
+                    }
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="colorModal" tabindex="-1" aria-labelledby="colorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#17141f!important">
+            <div class="modal-header">
+                <h5 class="modal-title mx-auto" style="color:#e6e2e9" id="colorModalLabel">Choose color</h5>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="color-container">
+                    <div class="color-item" data-color="#ff0000" style="background-color: #ff0000;"></div>
+                    <div class="color-item" data-color="#00ff00" style="background-color: #00ff00;"></div>
+                    <div class="color-item" data-color="#0000ff" style="background-color: #0000ff;"></div>
+                    <div class="color-item" data-color="#ff7f50" style="background-color: #ff7f50;"></div>
+                    <div class="color-item" data-color="#ba55d3" style="background-color: #ba55d3;"></div>
+                    <div class="color-item" data-color="#ffff00" style="background-color: #ffff00;"></div>
+                    <div class="color-item" data-color="#ffffff" style="background-color: #ffffff;"></div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $('.modal').on('hidden.bs.modal', function () {
+            checkInputs();
+        })
+        $('.required-input').on('input', function () {
+            checkInputs();
+        })
+
+
+        function checkInputs() {
+            let allFilled = true;
+
+            $('.required-input').each(function () {
+                if ($(this).val().trim() === '') {
+                    allFilled = false;
+                    return false;
+                } else {
+                    console.log($(this).val().trim())
+                }
+            });
+
+            
+            if (allFilled) {
+                $('#btnCreate').removeClass('btn-hidden');
+                console.log("Show")
+            } else {
+                $('#btnCreate').addClass('btn-hidden');
+                console.log("Hiden");
+            }
+        }
+    });
+
+</script>
+
+<script>
+
+   $(document).ready(function () {
+    //Choose icon script
+    $(".icon-item").on("click", function () {
+        var svgContent = $(this).html().trim();
+        $("#iconInput").val(svgContent);
+
+        $("#iconInput").css({
+            "background-image": `url('data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}')`,
+            "background-repeat": "no-repeat",
+            "background-position": "left 30px center",
+            "background-size": "contain",
+        });
+
+        $("#iconModal").modal('hide');
+       })
+
+        //Choose color script
+        $(".color-item").on("click", function () {
+            var selectedColor = $(this).data("color");
+
+            $("#colorCircle").css({
+                "background-color": selectedColor
+            });
+            $("#colorInput").val(selectedColor);
+
+            var svgContent = $("#iconInput").css("background-image");
+            svgContent = svgContent.replace(/^url\("data:image\/svg\+xml;utf8,/, '').replace(/"\)$/, '');
+            svgContent = decodeURIComponent(svgContent);
+
+            if (svgContent.includes('fill=')) {
+                svgContent = svgContent.replace(/fill="[^"]*"/, `fill="${selectedColor}"`);
+            } else {
+                svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${selectedColor}">`);
+            }
+            var encodedSvgContent = `data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}`;
+
+            $("#iconInput").css({
+                "background-image": `url('${encodedSvgContent}')`,
+            })
+
+            $("#colorModal").modal('hide');
+        });
+
+      $('#iconInput').click(function () {
+          $('#iconModal').modal('show');
+      });
+      
+      $("#colorInput").on("click", function () {
+          $("#colorModal").modal('show');
+      });
+
+
+   });
+</script>
+
+
+
+<style>
+
+
+
+
+    .info-input {
+        display: flex;
+        align-items: center;
+    }
+
+        .info-input .fa {
+            margin-right: 10px; 
+            font-size: 20px; 
+            color: #6c757d; 
+        }
+
+
+    .btn-hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .btn-submit{
+        background:none;
+        border:none;
+        padding:0;
+        cursor:pointer;
+        color:#CCCCCC;
+    }
+
+
+    .icon-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; 
+        max-width: 600px;
+    }
+
+ 
+
+    .custom-btn-close {
+        filter: invert(65%) sepia(15%) saturate(500%) hue-rotate(200deg) brightness(90%) contrast(80%);
+    }
+
+
+    .color-container {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .color-item {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #colorInput {
+        cursor: pointer;
+    }
+
+    .color-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        top: 50%;
+        left: 115px; /* Смещение влево внутри инпута */
+        transform: translateY(-50%);
+        pointer-events: none; /* Чтобы кружок не мешал клику на инпут */
+    }
+
+
+</style>

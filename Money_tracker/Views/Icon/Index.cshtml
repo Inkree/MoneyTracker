@@ -1,0 +1,13 @@
+﻿@using Core.models
+@model IEnumerable<Icon>;
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@foreach(var icon in Model)
+{
+  <div class="icon" style="fill:black">
+    @Html.Raw(icon.SvgContent)
+    </div>
+}

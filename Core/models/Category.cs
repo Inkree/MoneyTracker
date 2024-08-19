@@ -1,36 +1,33 @@
-﻿namespace Core.models
+﻿using Core.interfaces;
+
+namespace Core.models
 {
-    public class Category
+    public class Category:BaseEntity,IAuditableEntity
     {
-        public Category(string id,string name,Icon icon,string color,string userId,string iconId)
-        { 
-            Id = id;
+        public Category(string name,string svgContent,string color,string userId)
+        {     
             Name = name;
-            Icon = icon;
             Color = color;
             UserId = userId;
-            IconId = iconId;
-            Icon = new Icon();
+            SvgContent = svgContent;
             Transactions = new List<Transaction>();
         }
         public Category()
         { 
-            Id = String.Empty;
             Name = String.Empty;
             Color = String.Empty;
-            IconId = String.Empty;
+            SvgContent = String.Empty;
             UserId = String.Empty;
-            Icon = new Icon();
             Transactions = new List<Transaction>();
         }
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string IconId { get; set; }
-        public Icon Icon { get; set; }
+        public string Name { get; set; }      
         public string Color { get; set; }
-        public string UserId { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
-        
-
+        public string? UserId { get; set; }
+        public string SvgContent { get; set; }
+        public IEnumerable<Transaction>? Transactions { get; set; }
+        string? IAuditableEntity.CreatedBy { get; set; }
+        string? IAuditableEntity.lastModifiedBy { get; set; }
+        DateTimeOffset? IAuditableEntity.CreatedAt { get; set; }
+        DateTimeOffset? IAuditableEntity.lastModifiedAt { get; set; }
     }
 }

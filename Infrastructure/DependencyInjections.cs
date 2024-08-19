@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Transactions;
 
 
@@ -31,13 +32,19 @@ namespace Infrastructure
                 .AddDefaultTokenProviders();
             services.AddAuthentication(options =>
             {
-                //options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddGoogle(options =>
             { 
                 options.ClientId = "419709762966-scckv7qb9rnpdq6uh3bp60cgncminv2h.apps.googleusercontent.com";
                 options.ClientSecret = "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";
+                options.CallbackPath = "/signin-google";
+            }).AddCookie(options => 
+            {
+                options.LoginPath = "/Auth/Login";
+                options.AccessDeniedPath = "/Auth/AccessDenied";
             });
+
             services.AddHttpContextAccessor();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IUserService,UserService>();

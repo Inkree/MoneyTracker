@@ -34,7 +34,6 @@ namespace Infrastructure.Data.Identity.Services
         public async Task<bool> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent,bool bypassTwoFactor)
         {
            var result = await _signInManager.ExternalLoginSignInAsync(loginProvider,providerKey,isPersistent,bypassTwoFactor);
-          
            return result.Succeeded;
         }
 
@@ -88,11 +87,15 @@ namespace Infrastructure.Data.Identity.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> SignInAsync(SignInRequest signInRequest)
+        public async Task SignInAsync(SignInRequest signInRequest)
         {
-            var signInResult = await _signInManager.PasswordSignInAsync(signInRequest.Email, signInRequest.Password, signInRequest.RememberMe, false);
-
-            return signInResult.Succeeded;
+            var user = new User
+            {
+                Email = signInRequest.Email,
+                UserName = signInRequest.Email
+            };
+             await _signInManager.SignInAsync(user,true);
+            //var signInResult = await _signInManager.PasswordSignInAsync(signInRequest.Email, signInRequest.Password, signInRequest.RememberMe, false);
         }
 
         public async Task SignOutAsync()
@@ -109,12 +112,6 @@ namespace Infrastructure.Data.Identity.Services
             };
 
             var result = await _userManager.CreateAsync(user);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-            }
-            
             return result.ToApplicationResult();
         }
 

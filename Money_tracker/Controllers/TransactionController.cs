@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Money_tracker.Controllers
 {
+    [Authorize]
     [Route("[controller]/[action]")]
+
     public class TransactionController : Controller
     {
         private readonly ITransactionsService _transactionService;

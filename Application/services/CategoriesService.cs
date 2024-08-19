@@ -15,12 +15,12 @@ namespace Application.services
         {
             _repository = repository;
         }
-        public async Task Create(Category category)
+        public async Task CreateAsync(Category category)
         {
           await _repository.AddAsync(category);
         }
 
-        public async Task Delete(string id)
+        public async Task DeleteAsync(string id)
         {
            await _repository.DeleteAsync(id);
         }

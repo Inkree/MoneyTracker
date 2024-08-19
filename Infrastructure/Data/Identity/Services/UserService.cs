@@ -62,9 +62,9 @@ namespace Infrastructure.Data.Identity.Services
             throw new NotImplementedException();
         }
 
-        public Task<string> GetUserIdAsync(ClaimsPrincipal principal)
+        public string? GetUserId(ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+           return _userManager.GetUserId(principal);
         }
 
         public Task<string> GetUserNameAsync(ClaimsPrincipal principal)
@@ -91,7 +91,7 @@ namespace Infrastructure.Data.Identity.Services
         {
           
           var loginInfo = new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.DisplayName);
-            var user = await _userManager.FindByIdAsync(userDto.Id);
+            var user = await _userManager.FindByEmailAsync(userDto.Email);
           var result = await _userManager.AddLoginAsync(user,loginInfo);
           return result.ToApplicationResult();
         }

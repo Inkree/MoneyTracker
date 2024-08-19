@@ -4,8 +4,8 @@ namespace Application.Interfaces
 {
     public interface ICategoriesService
     {
-        Task Create(Category category);
-        Task Delete(string id);
+        Task CreateAsync(Category category);
+        Task DeleteAsync(string id);
         Category Edit(string id, Category transaction);
         Task<IEnumerable<Category?>> GetAllByUserIdAsync(string userId);
     }

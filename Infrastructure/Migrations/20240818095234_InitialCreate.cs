@@ -53,19 +53,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Icons",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Icons", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -177,9 +164,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    IconId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Color = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SvgContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,24 +177,18 @@ namespace Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Categories_Icons_IconId",
-                        column: x => x.IconId,
-                        principalTable: "Icons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Note = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    DateCreated = table.Column<DateOnly>(type: "date", nullable: false),
-                    Ammount = table.Column<decimal>(type: "decimal(18,2)", maxLength: 40, nullable: false),
+                    DateCreated = table.Column<DateOnly>(type: "date", nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CategoryId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     lastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -217,11 +198,17 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Transactions", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Transactions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Transactions_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -264,11 +251,6 @@ namespace Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_IconId",
-                table: "Categories",
-                column: "IconId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Categories_UserId",
                 table: "Categories",
                 column: "UserId");
@@ -277,6 +259,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Transactions_CategoryId",
                 table: "Transactions",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_UserId",
+                table: "Transactions",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -308,9 +295,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Icons");
         }
     }
 }

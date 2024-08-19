@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
 
 
 namespace Infrastructure.Data
@@ -14,22 +15,33 @@ namespace Infrastructure.Data
         private readonly IHttpContextAccessor _httpContextAccessor;
         public MoneyTrackerDbContext(DbContextOptions<MoneyTrackerDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options) 
         {
+
             this._httpContextAccessor = httpContextAccessor;
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Icon> Icons { get; set; }
 
+
+
+
+        //public DbSet<Icon> Icons { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             new DbInitializer(builder).Seed();
         }
+
+
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries().Where(e => e.Entity is IAuditableEntity && (
               e.State == EntityState.Added || e.State == EntityState.Modified));
-            foreach(var entityEntry in entries)
+            foreach (var entityEntry in entries)
             {
                 if (entityEntry.State == EntityState.Added)
                 {

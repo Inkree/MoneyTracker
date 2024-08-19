@@ -40,9 +40,10 @@ namespace Infrastructure.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public Task<IEnumerable<Icon>> GetAllAsync()
+        public async Task<IEnumerable<Icon>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            //return await _dbContext.Icons.ToListAsync();
+            throw new Exception();
         }
     }
 }

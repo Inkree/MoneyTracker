@@ -21,9 +21,21 @@ namespace Infrastructure.Repositories
         }
         public async Task AddAsync(Category category)
         {
-            await _dbSet.AddAsync(category);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+               
+                await _dbSet.AddAsync(category);         
+                await _dbContext.SaveChangesAsync();          
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
+                Console.WriteLine("Stack Trace: " + ex.StackTrace);
+            }
         }
+
+
+      
 
         public async Task DeleteAsync(string id)
         {
@@ -37,7 +49,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Category>> GetAllByUserIdAsync(string userId)
         {
-            return await _dbSet.Where(x => x.UserId == userId).ToListAsync();
+            return await _dbSet.Where(x => x.UserId == userId || x.UserId == null).ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetAllByNameAsync(string name)
@@ -55,7 +67,7 @@ namespace Infrastructure.Repositories
            return await _dbSet.Where(x=>x.Id == id).FirstOrDefaultAsync();   
         }
 
-        public async void UpdateAsync(Category category)
+        public async Task UpdateAsync(Category category)
         {
             _dbSet.Update(category);
             await _dbContext.SaveChangesAsync();

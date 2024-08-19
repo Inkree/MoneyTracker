@@ -21,7 +21,7 @@ html {
 }
 
 body {
-    background: #070F2B;
+    background: #17141f;
     margin: 0px;
     padding: 0px;
 }
@@ -35,30 +35,30 @@ body {
 }
 
 .main-column {
-    background: #0f0c14;
+    background: #17141f;
     min-height: 100vh;
     color: #e6e1e5;
 }
 
 form .invisible-input {
-    background-color: #0f0c14;
+    background-color: #17141f;
     border: none;
     outline: none;
     color: #e6e1e5;
 }
 
-   
-form .invisible-input:focus {
+
+    form .invisible-input:focus {
         outline: none;
         box-shadow: none;
-        background-color: #0f0c14;
-        text-align: right;
+        background-color: #17141f;
+        text-align: left;
         color: #e6e1e5;
         padding-top: 0px;
     }
 
     form .invisible-input:-webkit-autofill {
-        background-color: #0f0c14 !important;
+        background-color: #17141f !important;
         color: #e6e1e5 !important;
         -webkit-box-shadow: 0 0 0px 1000px #0f0c14 inset;
         box-shadow: 0 0 0px 1000px #0f0c14 inset;
@@ -83,3 +83,18 @@ form .invisible-input:focus {
 .hr {
     border-top: 1px,solid,dimgray;
 }
+
+
+.icon-item {
+    font-size: 1rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    fill: #6e6e73;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+   

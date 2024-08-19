@@ -11,7 +11,7 @@ namespace Application.Interfaces
     {
         public Task AddAsync(Category category);
         public Task DeleteAsync(string id);
-        public void UpdateAsync(Category category);
+        public Task UpdateAsync(Category category);
         public Task<Category?> GetByIdAsync(string id);
         public Task<IEnumerable<Category>> GetAllByUserIdAsync(string userId);
         public Task<IEnumerable<Category>> GetAllByNameAsync(string name);
