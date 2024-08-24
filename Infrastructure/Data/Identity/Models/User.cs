@@ -10,5 +10,6 @@ namespace Infrastructure.Data.Identity.Models
         public string? Surname { get; set; }
         public IEnumerable<Transaction>? Transactions { get; set; }
         public IEnumerable<Category>? Categories { get; set; }
+
     }
 }

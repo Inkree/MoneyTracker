@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-12"></div>
+    <div class="col-lg-8 col-md-8 col-12  main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="graphic d-flex justify-content-center align-items-center text-center">
+
+            <canvas id="spending-chart"></canvas>
+        </div>
+       
+    </div>
+    <div class="col-lg-2 col-md-2 col-12"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+<style>
+    #spending-chart {
+        width: 100%;
+        height: auto;
+        max-width: 400px; 
+        
+    }
+</style>
+
+
+<script>
+    const ctx = document.getElementById('spending-chart').getContext('2d');
+
+    let chartData = {
+        datasets: [{
+            data: [8442, 800, 544],
+            backgroundColor: ['#8e44ad', '#f39c12', '#e74c3c'],
+        }],
+        labels: ['Uncategorized', 'Pets', 'Sports']
+    };
+
+    const spendingChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: chartData,
+        options: {
+            plugins: {
+                legend: {
+                    display: false, // Отключаем отображение легенды
+                }
+            }
+        }
+    });
+    
+</script>

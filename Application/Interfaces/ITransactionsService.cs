@@ -10,5 +10,7 @@ namespace Application.Interfaces
         bool Delete(string id);
         Transaction Edit(string id,Transaction transaction);
         Task<IEnumerable<Transaction?>> GetAllByUserId(string userId);
+        Task<List<IGrouping<DateTime, Transaction?>>> GetGroupedTransactionsByUserId(string userId);
+        public Task<decimal> GetUserBalance(string userId);
     }
 }

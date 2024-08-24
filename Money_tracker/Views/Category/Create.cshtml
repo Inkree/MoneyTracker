@@ -8,8 +8,8 @@
 
 
 <div class="row">
-    <div class="col-lg-3 col-md-2 col-12"></div>
-    <div class="col-lg-6 col-md-8 col-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+    <div class="col-lg-2 col-md-2 col-12"></div>
+    <div class="col-lg-8 col-md-8 col-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
         <div class="content flex-grow-1">
             <form asp-action="Create" asp-controller="Category" >
                 <div class="header d-flex justify-content-center align-items-center m-3">
@@ -48,7 +48,7 @@
         @* <partial name="AuthFooter" /> *@
         @await Html.PartialAsync("AuthFooter",new AuthFooterModel())
     </div>
-    <div class="col-lg-3 col-md-2 col-12"></div>
+    <div class="col-lg-2 col-md-2 col-12"></div>
 </div>
 
 
@@ -199,33 +199,6 @@
 
 <style>
 
-
-
-
-    .info-input {
-        display: flex;
-        align-items: center;
-    }
-
-        .info-input .fa {
-            margin-right: 10px; 
-            font-size: 20px; 
-            color: #6c757d; 
-        }
-
-
-    .btn-hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .btn-submit{
-        background:none;
-        border:none;
-        padding:0;
-        cursor:pointer;
-        color:#CCCCCC;
-    }
 
 
     .icon-container {

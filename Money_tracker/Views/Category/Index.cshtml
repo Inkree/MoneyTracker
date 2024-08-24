@@ -8,51 +8,60 @@
 
 <div class="row">
     <div class="col-md-3"></div>
-    <div class="col-md-6 col-xs-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
-        <div class="content flex-grow-1">
-            <div class="header">
+    <div class="col-md-6 col-xs-12 main-column p-0">
+        <div class="content">
+            <div class="header mt-2">
                 <p class="fs-4">Category</p>
             </div>
-            <div class="search mt-5 d-flex justify-content-center">
+            <div class="search mt-2 d-flex justify-content-center">
                 <input style="background:#29272f" placeholder="Search.." class="form-control mx-3" />
             </div>
-            <div class="categories mt-5 p-4">
+            <div class="categories mt-1 p-4">
                 @foreach(var category in Model)
                 {
                     <div class="category mt-3">
                         <div class="icon-item" style="fill:@category.Color"> @Html.Raw(category.SvgContent) </div>
                         <p class="fs-5 m-1"> @category.Name</p>
-                       
                     </div>
                     <hr />
                 }
-               
-               
             </div>
+           
         </div>
         @await Html.PartialAsync("AuthFooter", new AuthFooterModel())
     </div>
-   
     <div class="col-md-3"></div>
-   
 </div>
 
 
-
 <style>
-
-    
+    html,body{
+        overflow-y: hidden;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+        max-height:95vh;
+        overflow-y: scroll;
+    }
     .category {
         display: flex;
-        align-items: center; /* Выравнивание элементов по вертикали */
+        align-items: center; 
        gap:10px
     }
 
-    
+    .categories{
+        
+        flex-grow: 1;
+    }
+
     .main-column {
         background: #0f0c14;
-        min-height: 100vh;
+        min-height:100vh;
         color: #e6e1e5;
+        display: flex;
+        flex-direction: column;
+       
     }
 
     .transaction- card .day {

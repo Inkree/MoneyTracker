@@ -20,13 +20,13 @@ namespace Application.services
         }
         public async Task Create(Transaction transaction)
         {
-           await _transactionsRepository.AddAsync(transaction);
+            await _transactionsRepository.AddAsync(transaction);
         }
 
-      
+
         public async Task Delete(string id)
         {
-           await _transactionsRepository.DeleteAsync(id);
+            await _transactionsRepository.DeleteAsync(id);
         }
 
         public Transaction Edit(string id, Transaction transaction)
@@ -36,13 +36,30 @@ namespace Application.services
 
         public async Task<IEnumerable<Transaction?>> GetAllByUserId(string userId)
         {
-            return await  _transactionsRepository.GetByUserIdAsync(userId);
-          
+            return await _transactionsRepository.GetByUserIdAsync(userId);
+
+        }
+
+        public async Task<List<IGrouping<DateTime, Transaction?>>> GetGroupedTransactionsByUserId(string userId)
+        {
+            var today = DateTime.Today;
+            var transactions = await _transactionsRepository.GetByUserIdAsync(userId);
+            var groupedTransactions = transactions.GroupBy(t => t.CreatedAt.Value.Date)
+                  .OrderByDescending(g => g.Key)
+                  .ToList();
+            return groupedTransactions;
         }
 
         bool ITransactionsService.Delete(string id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<decimal> GetUserBalance(string userId)
+        {
+            var transactions = await _transactionsRepository.GetByUserIdAsync(userId);
+            return transactions.Sum(t => t.Amount);
+          
         }
     }
 }

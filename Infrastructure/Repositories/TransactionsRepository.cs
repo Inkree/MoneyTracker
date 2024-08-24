@@ -55,7 +55,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Transaction?>> GetByUserIdAsync(string userId)
         {
-            return await _dbSet.Where(x => x.UserId == userId).ToListAsync();
+            return await _dbSet.Where(x => x.UserId == userId).Include(x => x.Category).ToListAsync();
         }
 
         public Task UpdateAsync(Transaction transaction)

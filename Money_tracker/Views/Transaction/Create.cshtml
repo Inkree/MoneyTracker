@@ -1,38 +1,45 @@
-﻿@{
+﻿@using Pages.Shared;
+@using Money_tracker.ViewModels.Transactions;
+@model CreateTransactionViewModel;
+
+@{
     Layout = "_Layout";
 }
 
-
 <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 col-xs-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+    <div class="col-lg-2 col-md-2 col-12"></div>
+    <div class="col-lg-8 col-md-8 col-12  main-column p-0 d-flex flex-column justify-content-between min-vh-100">
         <div class="content flex-grow-1">
-           <form>
-            <div class="header d-flex justify-content-center align-items-center m-3">
+            <form asp-action="Create" asp-controller="Transaction">
+                <div class="header d-flex justify-content-center align-items-center m-3">
                     <p class="fs-4 mb-0 ml-5 flex-grow-1 text-center">Your balance</p>
-                    <a id="btnCreate" asp-action="Create" class="ms-auto btn-hidden">Add</a>
+                    <button type="submit" id="btnCreate" class="ms-auto btn-submit btn-hidden">Create</button>
             </div>
-
-         <div class="form-transaction mt-5">
-            
-                    <input id="sumInput" style="text-align:right;" class="form-control mt-5 px-4 fs-3 invisible-input" placeholder="0 " />
+                <div class="input-group">
+                <div class="btn-group w-100 px-5" style="" role="group">
+                        <button id="minusButton" type="button" class="btn btn-dark active ">Expense</button>
+                    <button id="plusButton" type="button" class="btn btn-dark ">Income</button>
+                </div>
+                </div>
+         <div class="form-transaction mt-5">                  
+                    <input name="Amount" value="-" id="sumInput" style="text-align:right;" autocomplete="off" class="form-control required-input mt-5 px-4 fs-3 invisible-input" placeholder="0 " />
                  <div class="info">
                      <hr />
                      <div class="info-input px-5">
                          <i class="fa fa-solid fa-tag"></i>
-                           
-                         <input id="categoryInput" class="form-control invisible-input px-5 text-center" placeholder="Add category"/>
-                            
-                     </div>
+                            <input id="categoryInput" autocomplete="off" class="form-control invisible-input px-5 text-center" placeholder="Add category" />
+                            <input name="CategoryId" id="categoryIdInput" style="display:none" />
+                      </div>
+                        
                      <hr />
-                      <div class="info-input px-5"> 
-                          <i class="fa fa-solid fa-tag"></i>
-                          <input id="hashtagInput" class="form-control invisible-input px-5 text-center" placeholder="Add a hashtag" />
+                      <div class="info-input px-5">
+                          <i class="fa fa-solid fa-hashtag"></i>
+                            <input name="Hashtag" id="hashtagInput" autocomplete="off" class="form-control invisible-input px-5 text-center" placeholder="Add a hashtag" />
                       </div>
                         <hr />
                         <div class="info-input px-5">
-                            <i class="fa fa-solid fa-tag"></i>
-                            <input id="tagInput" class="form-control invisible-input px-5 text-center" placeholder="Add a note" />
+                            <i class="fa fa-solid fa-comment"></i>
+                            <input name="Note" id="noteInput" autocomplete="off" class="form-control invisible-input px-5 text-center" placeholder="Add a note" />
                         </div>
                  </div>
             
@@ -40,29 +47,36 @@
             </form>
 
         </div>
-       
-        <partial name="AuthFooter" />
+
+        @await Html.PartialAsync("AuthFooter", new AuthFooterModel())
     </div>
-    <div class="col-md-3"></div>
+    <div class="col-lg-2 col-md-2 col-12"></div>
 </div>
 
 
 
 <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="background:#17141f!important">
             <div class="modal-header">
                 <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
-                <h5 class="modal-title mx-auto" id="categoryModalLabel">Select Category</h5>
+                <h5 style="color:#e6e2e9" class="modal-title mx-auto" id="categoryModalLabel">Select Category</h5>
                 <a asp-controller="Category" asp-action="Create"><i class="fa-solid fa-plus fs-5 p-2"></i></a>
             </div>
             <div class="modal-body">
-                <ul class="">
-                    <li class="">Category 1</li>
-                    <li class="">Category 2</li>
-                    <li class="">Category 3</li>
-                   
-                </ul>
+                <div class="categories mt-1 p-4">
+                    @foreach (var category in Model.Categories)
+                    {
+                        <div class="category mt-3">
+                            <div class="icon-item" style="fill:@category.Color"> @Html.Raw(category.SvgContent) </div>
+                            <p style="color:#e6e2e9" class="fs-5 m-1 category-name"> @category.Name</p>
+                            <p style="display:none" class="category-svgContent">@category.SvgContent</p>
+                            <p style="display:none" class="category-id">@category.Id</p>
+                            <p style="display:none" class="category-color">@category.Color</p>
+                        </div>
+                        <hr />
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -71,20 +85,59 @@
 
 <script>
     $(document).ready(function () {
-        console.log("jQuery is loaded and document is ready");
+
+        $('#sumInput').val('-0');
+
+        $('#plusButton').on('click', function () {
+            $(this).addClass('active')
+            $('#minusButton').removeClass('active');
+            updateInputValue('+');
+        });
+
+        $('#minusButton').on('click', function () {
+            $(this).addClass('active')
+            $('#plusButton').removeClass('active');
+            updateInputValue('-');
+        });
+
+        function updateInputValue(sign) {
+            let value = $('#sumInput').val().replace(/[+-]/, '');
+            $('#sumInput').val(sign + value);
+        }
 
         $('#sumInput').on('input', function () {
-            console.log("Input event triggered");
-            var sum = $(this).val();
-            console.log("Input value: " + sum);
-            if (sum && sum != "0") {
-                $('#btnCreate').removeClass('btn-hidden');
-                console.log("Button shown");
-            } else {
-                $('#btnCreate').addClass('btn-hidden');
-                console.log("Button hidden");
+            let currentVal = $(this).val();
+
+            
+            if (!currentVal.startsWith('+') && !currentVal.startsWith('-')) {
+                let sign = $('#plusButton').hasClass('active') ? '+' : '-';
+                $(this).val(sign + currentVal);
             }
         });
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $('.modal').on('hidden.bs.modal', function () {
+            CheckInputs();
+        })
+        $('#sumInput').on('input', function () {
+            CheckInputs();
+        })
+
+        function CheckInputs(){
+            var sum = $('#sumInput').val();
+            var category = $('#categoryInput').val();
+            if (sum != "-0" && sum != "+0" && sum && category) {              
+                $('#btnCreate').removeClass('btn-hidden');
+            } else {
+                $('#btnCreate').addClass('btn-hidden');
+               
+            }
+        }
+
     });
 </script>
 
@@ -95,34 +148,46 @@
             $('#categoryModal').modal('show');
         });
 
-        // Handle category selection from modal
-        $('.list-group-item').click(function () {
-            var selectedCategory = $(this).text().trim();
-            $('#categoryInput').val(selectedCategory);
+        $('.category').click(function () {
+            const categoryName = $(this).find('.category-name').text();
+            let svgContent = $(this).find('.category-svgContent').text();
+            const color = $(this).find('.category-color').text();
+            const Id = $(this).find('.category-id').text();
+
+            $("#categoryInput").val(categoryName);
+            $('#categoryIdInput').val(Id);
+            if (svgContent.includes('fill=')) {
+                svgContent = svgContent.replace(/fill="[^"]*"/, `fill="${color}"`);
+            } else {
+                svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${color}">`);
+            }
+            $("#categoryInput").css({
+                "background-image": `url('data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}')`,
+                "background-repeat": "no-repeat",
+                "background-position": "left 100px center",
+                "background-size": "contain",
+                "padding-left": "400px"
+            });
+
+
             $('#categoryModal').modal('hide');
-        });
+        })
+        
     });
 </script>
 
 <style>
-    
+ 
+   
+ 
 
-  
+   
 
-    .info-input {
-        display: flex;
-        align-items: center;
-    }
-
-        .info-input .fa {
-            margin-right: 10px; /* Отступ между иконкой и инпутом */
-            font-size: 20px; /* Размер иконки */
-            color: #6c757d; /* Цвет иконки */
-        }
-
-
-    .btn-hidden {
-        opacity: 0;
-        pointer-events: none;
+    .btn-dark{
+        background: #242128;
+      /*   border-radius:10px; */
+    } 
+    .active{
+       /*  background:#302d36; */
     }
 </style> 

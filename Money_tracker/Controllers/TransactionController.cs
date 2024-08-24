@@ -1,8 +1,10 @@
 ﻿using Application.Interfaces;
-using Application.services;
+using Core.interfaces;
 using Core.models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using Money_tracker.ViewModels.Transactions;
 
 namespace Money_tracker.Controllers
 {
@@ -12,22 +14,46 @@ namespace Money_tracker.Controllers
     public class TransactionController : Controller
     {
         private readonly ITransactionsService _transactionService;
-        public TransactionController(ITransactionsService transactionService)
+        private readonly ICategoriesService _categoriesService;
+        private readonly IUserService _userService;
+        
+        public TransactionController(ITransactionsService transactionService, ICategoriesService categoriesService,IUserService userService)
         {
             _transactionService = transactionService;
+            _categoriesService = categoriesService;
+            _userService = userService;
+            
         }
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-           ViewBag.ActiveIcon = "index";
-           var transactions = await _transactionService.GetAllByUserId("20a41740-0419-49d1-a22c-891478876840");
-            return View();
+
+            var viewModel = new IndexTransactionViewModel();
+            var userId = _userService.GetUserId(User);
+            viewModel.Transactions = await _transactionService.GetGroupedTransactionsByUserId(userId);
+            viewModel.Balance = await _transactionService.GetUserBalance(userId);
+            return View(viewModel);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.ActiveIcon = "create";
+            var viewModel = new CreateTransactionViewModel();
+            var userId = _userService.GetUserId(User);
+            viewModel.Categories = await _categoriesService.GetAllByUserIdAsync(userId);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Transaction transaction)
+        {
+            transaction.UserId = _userService.GetUserId(User);
+            await _transactionService.Create(transaction);
+            return RedirectToAction("Index", "Transaction");
+        }
+
+        public IActionResult Statistic()
+        {
             return View();
         }
 
