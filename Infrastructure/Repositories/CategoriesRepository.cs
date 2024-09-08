@@ -73,6 +73,11 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public IEnumerable<Category> Find(string name)
+        {
+            return _dbSet.Where(c => c.Name.Contains(name));      
+        }
+
        
 
 

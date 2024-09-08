@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Pages.Shared;
+@{
     Layout = "_Layout";
 }
 
@@ -7,11 +8,28 @@
 <div class="row">
     <div class="col-lg-2 col-md-2 col-12"></div>
     <div class="col-lg-8 col-md-8 col-12  main-column p-0 d-flex flex-column justify-content-between min-vh-100">
-        <div class="graphic d-flex justify-content-center align-items-center text-center">
-
+        <div class="content flex-grow-1">
+            <div class="header text-center d-flex justify-content-center m-3">              
+                <p class="fs-4">Most spending categories</p>             
+            </div>
+            
+            <div id="date-range">
+                <button id="prev-month"><</button>
+                <span id="date-display"></span>
+                <button id="next-month">></button>
+            </div>
+           <div class="graphic d-flex justify-content-center align-items-center text-center">
             <canvas id="spending-chart"></canvas>
-        </div>
-       
+          </div>
+            <div class="total-spend d-flex justify-content-between mx-3">
+              <p style="font-size:16px">Total spent</p>
+              <p id="totalSpent">0.00</p>
+          </div>
+            <div class="category-grid">              
+                
+            </div>
+       </div>
+        @await Html.PartialAsync("AuthFooter", new AuthFooterModel())
     </div>
     <div class="col-lg-2 col-md-2 col-12"></div>
 </div>
@@ -22,34 +40,182 @@
 <style>
     #spending-chart {
         width: 100%;
-        height: auto;
+        max-height: 400px;
         max-width: 400px; 
+        margin:20px;
         
+    }
+
+    #date-range {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        #date-range button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+        padding-left:20px;
+        padding-right:20px;
+    }
+
+    .category-card {
+       
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .category-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+       
+    }
+        .category-icon svg {
+            width: 36px; 
+            height: 36px;
+        }
+    .category-sum{
+        color: #ffff;
+    }
+    .category-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #6e6b72;
     }
 </style>
 
+<script type="text/javascript">
+    $(document).ready(function () 
+    {
+        let currentDate = new Date;
+        var startDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1));
+        var endDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
+        let spendingChart;
 
-<script>
-    const ctx = document.getElementById('spending-chart').getContext('2d');
+        function updateCategoryGrid(categories) {
+            var categoryGrid = $('.category-grid');
+            categoryGrid.empty();
 
-    let chartData = {
-        datasets: [{
-            data: [8442, 800, 544],
-            backgroundColor: ['#8e44ad', '#f39c12', '#e74c3c'],
-        }],
-        labels: ['Uncategorized', 'Pets', 'Sports']
-    };
+            categories.forEach(function (category) {
+                var categoryCard = `
+                       <div class="category-card">
+                               <div style="fill:${category.color}" class="category-icon">
+                               ${category.svgContent}
+                           </div>
+                               <div class="category-sum">${category.totalSpent}</div>
+                               <div class="category-name">${category.categoryName}</div>
+                       </div>
+                   `;
 
-    const spendingChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: chartData,
-        options: {
-            plugins: {
-                legend: {
-                    display: false, // Отключаем отображение легенды
-                }
-            }
+                categoryGrid.append(categoryCard);
+            });
         }
-    });
-    
+
+
+        function getCategoryExpenses(startDate,endDate) {
+            var startDateString = startDate.toISOString().split('T')[0];
+            var endDateString = endDate.toISOString().split('T')[0];
+
+            $.ajax({
+                url: '/Transaction/GetCategoryExpenses',
+                type: 'GET',
+                data: { startDate: startDateString, endDate: endDateString },
+                success: function (data) {                 
+                    updateCategoryGrid(data);
+                    createDoughunt(data);
+                }
+            });
+            };
+
+       function updateDateRange() {
+           let firstDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+           let lastDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+           let options = { month: 'short' };
+            let formattedFirstDate = `${firstDate.getDate()} ${firstDate.toLocaleDateString('en-US', options)}`;
+            let formattedLastDate = `${lastDate.getDate()} ${lastDate.toLocaleDateString('en-US', options)}`;
+           
+              
+           document.getElementById('date-display').textContent =
+                `${formattedFirstDate} - ${formattedLastDate}`;
+            getCategoryExpenses(firstDate, lastDate)
+        };
+
+
+
+
+        function createDoughunt(categories) {
+            let labels = [];
+            let data = [];
+            let backgroundColor = [];
+            let totalSpent = 0;
+            if (spendingChart) {
+                spendingChart.destroy(); 
+            }
+            categories.forEach(category => {
+                labels.push(category.categoryName);
+                data.push(category.totalSpent);
+                backgroundColor.push(category.color);
+                totalSpent += category.totalSpent;
+            });
+            totalSpent = parseFloat(totalSpent).toFixed(2);
+            document.getElementById('totalSpent').textContent = totalSpent;
+            const ctx = document.getElementById('spending-chart').getContext('2d');
+
+            let chartData = {
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColor,
+                }],
+                labels: labels,
+            };
+
+             spendingChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+        document.getElementById('prev-month').addEventListener('click', function () {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateDateRange();
+        });
+        
+        document.getElementById('next-month').addEventListener('click', function () {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateDateRange();
+        });
+    updateDateRange();
+        });
 </script>

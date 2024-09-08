@@ -1,0 +1,76 @@
+﻿@using Core.models;
+@using Pages.Shared;
+@model Transaction;
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-12"></div>
+    <div class="col-lg-8 col-md-8 col-12  main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="content flex-grow-1">
+            
+                <div class="header d-flex justify-content-center align-items-center m-3">
+                    <p class="fs-4 mb-0 ml-5 flex-grow-1 text-center">Your balance</p>
+                    <button type="submit" id="btnCreate" class="ms-auto btn-submit btn-hidden">Create</button>
+                </div>
+               
+                <div class="form-transaction mt-5">
+                    <input name="Amount" value="@Model.Amount" id="sumInput" style="text-align:right;" autocomplete="off" readonly class="form-control required-input mt-5 px-4 fs-3 invisible-input" placeholder="0 " />
+                    <div class="info">
+                        <hr />
+                        <div class="info-input px-5">
+                            <i class="fa fa-solid fa-tag"></i>
+                            <input id="categoryInput" autocomplete="off" readonly class="form-control invisible-input px-5 text-center" />
+                            <input name="CategorySvgContent" id="category-svgContent" value="@Model.Category.SvgContent" style="display:none" />
+                            <input name="CategoryColor" id="category-color" value="@Model.Category.Color" style="display:none" />
+                            <input name="CategoryName" id="category-name" value="@Model.Category.Name" style="display:none" />
+                        </div>
+
+                        <hr />
+                        <div class="info-input px-5">
+                            <i class="fa fa-solid fa-hashtag"></i>
+                            <input name="Hashtag" id="hashtagInput" autocomplete="off" readonly class="form-control invisible-input px-5 text-center" />
+                        </div>
+                        <hr />
+                        <div class="info-input px-5">
+                            <i class="fa fa-solid fa-comment"></i>
+                            <input name="Note" value="@Model.Note" id="noteInput" autocomplete="off" readonly class="form-control invisible-input px-5 text-center" />
+                        </div>
+                    </div>
+
+                </div>
+           
+
+        </div>
+
+        @await Html.PartialAsync("AuthFooter", new AuthFooterModel())
+    </div>
+    <div class="col-lg-2 col-md-2 col-12"></div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        const categoryName = $("#category-name").val();
+        let svgContent = $("#category-svgContent").val();
+        const color = $("#category-color").val();
+        if (svgContent.includes('fill=')) {
+            svgContent = svgContent.replace(/fill="[^"]*"/, `fill="${color}"`);
+        } else {
+            svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${color}">`);
+        }
+        $("#categoryInput").val(categoryName);
+        $("#categoryInput").css({
+            "background-image": `url('data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}')`,
+            "background-repeat": "no-repeat",
+            "background-position": "left 100px center",
+            "background-size": "contain",
+            "padding-left": "400px"
+        });    
+    });
+</script>
+
+
+

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MoneyTrackerDbContext))]
-    [Migration("20240818095234_InitialCreate")]
+    [Migration("20240903041201_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -72,11 +72,10 @@ namespace Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("DateCreated")
-                        .HasColumnType("date");
+                    b.Property<string>("Hashtag")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar");
 
@@ -316,7 +315,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Core.models.Category", "Category")
                         .WithMany("Transactions")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Infrastructure.Data.Identity.Models.User", null)

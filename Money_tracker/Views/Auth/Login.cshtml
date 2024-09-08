@@ -4,49 +4,33 @@
     Layout = "_Layout";
 }
 
-@* <div class="col-md-6">
-    @{
-        if(Model.ExternalLogins.Count > 0)
-        {
+<div class="row" style="height: 100vh; overflow: hidden;">
+    <div class="col-lg-2 col-md-2 col-12"></div>
+    <div class="col-lg-8 col-md-8 col-12 main-column d-flex flex-column justify-content-between" style="height: 100%;">
+        <div class="content p-2" style="flex-grow: 1;">
+            <div class="header mt-5 text-center">
+                <h1>Money tracker</h1>
+            </div>
+            <div class="title mt-4 text-center">
+                <h3>Track and analyze your expense today.</h3>
+            </div>
+            <div class="subtitle mt-4 text-center">
+                <p>
+                    Offer a way to keep track of your financial expenses in a convenient and organized way.
+                    It typically allows you to input information about your expenses and provides tools for
+                    analyzing and categorizing this information to help you better understand your spending habits.
+                </p>
+            </div>
             <form method="post" asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
-            <div>
-                @foreach (var provider in Model.ExternalLogins)
-                {
-                    <button type="submit" class="btn btn-primary" style="width:auto"
-                    name="provider" value="@provider.Name"
-                     title="Login using @provider.DisplayName account">
-                     @provider.DisplayName
-                     </button>
-                }
-                </div>
+                <button type="submit" class="btn mt-5 w-100" style="border:solid 1px black;background:dimgray" name="provider" value="Google">
+                    <i class="fab fa-google"></i> Login with Google
+                </button>
             </form>
-        }
-    }
-</div>
- *@
-
-
-<div class="row">
-    <div class="col-md-3 col-xl-3"></div>
-    <div class="col-md-6 col-xs-12">
-        <div class="header mt-5">
-            <h1>Money tracker</h1>
+            <div class="landing mt-4" style="flex-shrink: 0; text-align: center;">          
+                <img src="~/images/Logo.png" alt="Logo" style="max-width: 100%; max-height: 52vh; height: auto;" />
+            </div>
         </div>
-        <div class="title mt-4">
-            <h3>Track and analyze your expense today.</h3>
-        </div>
-        <div class="subtitle mt-4">
-            <p>offer away to keep track of your financial expenses in a convenient and organized way.
-            It typically allows you to input information about your expenses and provides tools for 
-            analyzing and categorizing this information to help you better understand your spending habits.
-        </p>
-        </div>
-        <form method="post" asp-controller="Auth" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
-            <button type="submit" class="btn mt-5 w-100" style="border:solid 1px black" name="provider" value="Google"> <i class="fab fa-google"></i> Login with Google </button>
-        </form>
-        <div class="landing mt-4" style="position: relative; overflow: hidden; width: 100%;margin: 0 auto;height:400px">
-            <img style="width:100%"  src="~/images/landing.webp" />
-        </div>
+      
     </div>
-    <div class="col-md-3"></div>
+    <div class="col-lg-2 col-md-2 col-12"></div>
 </div>

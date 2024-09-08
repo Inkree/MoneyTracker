@@ -1,7 +1,9 @@
 ﻿using Application.Interfaces;
+using Application.services;
 using Core.interfaces;
 using Core.models;
 using Infrastructure.Data.Identity.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Money_tracker.ViewModels;
 using System.IO;
@@ -10,6 +12,7 @@ using System.Security.Claims;
 namespace Money_tracker.Controllers
 {
     [Route("[controller]/[action]")]
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ICategoriesService _categoriesService;
@@ -49,6 +52,13 @@ namespace Money_tracker.Controllers
             category.UserId = userId;
             await _categoriesService.CreateAsync(category);
             return RedirectToAction("Index","Category");
+        }
+
+        [HttpGet]
+        public IActionResult Find(string name)
+        {
+            var categories = _categoriesService.Find(name).ToList();
+            return Json(categories);
         }
     }
 }

@@ -34,5 +34,9 @@ namespace Application.services
         {
             return await _repository.GetAllByUserIdAsync(userId);
         }
+        public IEnumerable<Category> Find(string name)
+        {
+            return _repository.Find(name);
+        }
     }
 }

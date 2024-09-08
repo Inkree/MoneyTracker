@@ -23,6 +23,10 @@ namespace Application.services
             await _transactionsRepository.AddAsync(transaction);
         }
 
+        public async Task<Transaction?> GetByIdAsync(string id)
+        {
+            return await _transactionsRepository.GetByIdAsync(id);
+        }
 
         public async Task Delete(string id)
         {
@@ -54,12 +58,23 @@ namespace Application.services
         {
             throw new NotImplementedException();
         }
-
         public async Task<decimal> GetUserBalance(string userId)
         {
             var transactions = await _transactionsRepository.GetByUserIdAsync(userId);
             return transactions.Sum(t => t.Amount);
-          
+
         }
+
+        public async Task<List<CategoryExpense>> GetTotalSpentByAllCategoriesAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _transactionsRepository.GetTotalSpentByAllCategoriesAsync(startDate, endDate);
+        }
+
+        public IEnumerable<Transaction> Find(string name)
+        {
+           return _transactionsRepository.Find(name);
+        }
+
+
     }
 }

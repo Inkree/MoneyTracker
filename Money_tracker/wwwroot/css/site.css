@@ -21,7 +21,7 @@ html {
 }
 
 body {
-    background: #17141f;
+    background: #111827!important;
     margin: 0px;
     padding: 0px;
 }
@@ -39,8 +39,15 @@ body {
     min-height: 100vh;
     color: #e6e1e5;
 }
+.content {
+    display: flex;
+    flex-direction: column;
+    max-height: 95vh;
+    min-height:95vh;
+    overflow-y: scroll;
+}
 
-form .invisible-input {
+.content .invisible-input {
     background-color: #17141f;
     border: none;
     outline: none;
@@ -48,7 +55,7 @@ form .invisible-input {
 }
 
 
-    form .invisible-input:focus {
+    .content .invisible-input:focus {
         outline: none;
         box-shadow: none;
         background-color: #17141f;
@@ -57,28 +64,37 @@ form .invisible-input {
         padding-top: 0px;
     }
 
-    form .invisible-input:-webkit-autofill {
-        background-color: #17141f !important;
+.content .invisible-input[readonly] {
+    outline: none;
+    box-shadow: none;
+    background-color: #17141f;
+    text-align: left;
+    color: #e6e1e5;
+    padding-top: 0px;
+}
+
+.content .invisible-input:-webkit-autofill {
+    background-color: #17141f !important;
+    color: #e6e1e5 !important;
+    -webkit-box-shadow: 0 0 0px 1000px #0f0c14 inset;
+    box-shadow: 0 0 0px 1000px #0f0c14 inset;
+}
+
+
+    .content .invisible-input:-webkit-autofill:hover {
+        background-color: #0f0c14 !important;
         color: #e6e1e5 !important;
         -webkit-box-shadow: 0 0 0px 1000px #0f0c14 inset;
         box-shadow: 0 0 0px 1000px #0f0c14 inset;
     }
 
-        /* Стили для автозаполнения при наведении */
-        form .invisible-input:-webkit-autofill:hover {
-            background-color: #0f0c14 !important;
-            color: #e6e1e5 !important;
-            -webkit-box-shadow: 0 0 0px 1000px #0f0c14 inset;
-            box-shadow: 0 0 0px 1000px #0f0c14 inset;
-        }
 
-        /* Стили для автозаполнения при фокусировке */
-        form .invisible-input:-webkit-autofill:focus {
-            background-color: #0f0c14 !important;
-            color: #e6e1e5 !important;
-            -webkit-box-shadow: 0 0 0px 1000px #0f0c14 inset;
-            box-shadow: 0 0 0px 1000px #0f0c14 inset;
-        }
+    .content .invisible-input:-webkit-autofill:focus {
+        background-color: #0f0c14 !important;
+        color: #e6e1e5 !important;
+        -webkit-box-shadow: 0 0 0px 1000px #0f0c14 inset;
+        box-shadow: 0 0 0px 1000px #0f0c14 inset;
+    }
 
 .hr {
     border-top: 1px,solid,dimgray;
@@ -111,13 +127,6 @@ form .invisible-input {
     color: #CCCCCC;
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
-    max-height: 95vh;
-    overflow-y: scroll;
-}
-
 
 .info-input {
     display: flex;
@@ -125,9 +134,9 @@ form .invisible-input {
 }
 
     .info-input .fa {
-        margin-right: 10px; /* Отступ между иконкой и инпутом */
-        font-size: 20px; /* Размер иконки */
-        color: #6c757d; /* Цвет иконки */
+        margin-right: 10px; 
+        font-size: 20px; 
+        color: #6c757d; 
     }
 
 
@@ -136,17 +145,22 @@ form .invisible-input {
     align-items: center;
     gap: 10px;
     
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавные переходы для эффектов */
-    border-radius: 8px; /* Скругленные углы */
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+    border-radius: 8px; 
 }
 
     .category:hover {
-        background-color: #2c2c2e; /* Изменение фона при hover */
-        transform: scale(1.05); /* Легкое увеличение размера */
+        background-color: #2c2c2e; 
+        transform: scale(1.05); 
         cursor: pointer;
     }
 
 .categories {
     flex-grow: 1;
+}
+
+.search-input {
+    background: #29272f;
+    border-color: #29272f;
 }
    

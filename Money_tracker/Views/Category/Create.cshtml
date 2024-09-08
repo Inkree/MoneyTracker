@@ -44,8 +44,7 @@
             </form>
 
         </div>
-
-        @* <partial name="AuthFooter" /> *@
+     
         @await Html.PartialAsync("AuthFooter",new AuthFooterModel())
     </div>
     <div class="col-lg-2 col-md-2 col-12"></div>
@@ -236,9 +235,9 @@
         height: 36px;
         border-radius: 50%;
         top: 50%;
-        left: 115px; /* Смещение влево внутри инпута */
+        left: 115px; 
         transform: translateY(-50%);
-        pointer-events: none; /* Чтобы кружок не мешал клику на инпут */
+        pointer-events: none;
     }
 
 

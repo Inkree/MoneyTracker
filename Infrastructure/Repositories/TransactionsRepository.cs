@@ -50,7 +50,9 @@ namespace Infrastructure.Repositories
 
         public async Task<Transaction?> GetByIdAsync(string id)
         {
-           return await _dbSet.FindAsync(id);
+            return await _dbSet
+        .Include(t => t.Category)  
+        .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<IEnumerable<Transaction?>> GetByUserIdAsync(string userId)
@@ -63,6 +65,31 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-       
+        public async Task<List<CategoryExpense>> GetTotalSpentByAllCategoriesAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _dbSet.Where(t => t.CreatedAt >= startDate && t.CreatedAt <= endDate && t.Amount < 0)
+                .GroupBy(t => t.Category)
+                .Select(g => new CategoryExpense
+                {
+                    CategoryId = g.Key.Id,
+                    CategoryName = g.Key.Name,
+                    SvgContent = g.Key.SvgContent,
+                    Color = g.Key.Color,
+                    TotalSpent = g.Sum(t => t.Amount)
+                })
+                .ToListAsync();
+        }
+
+
+        public IEnumerable<Transaction> Find(string name)
+        {
+            decimal nameDecimal;
+            bool isNumber = Decimal.TryParse(name, out nameDecimal);
+            return _dbSet.Where(t => t.Note.Contains(name) ||
+                          (isNumber && Math.Round(t.Amount, 0) == nameDecimal) ||
+                          t.Category.Name.Contains(name)   
+                          ).Include(t => t.Category);
+        }
+
     }
 }

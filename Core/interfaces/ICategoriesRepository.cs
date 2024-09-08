@@ -15,6 +15,7 @@ namespace Application.Interfaces
         public Task<Category?> GetByIdAsync(string id);
         public Task<IEnumerable<Category>> GetAllByUserIdAsync(string userId);
         public Task<IEnumerable<Category>> GetAllByNameAsync(string name);
+        public IEnumerable<Category> Find(string name);
 
     }
 }

@@ -34,15 +34,20 @@ namespace Infrastructure
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                
             }).AddGoogle(options =>
             { 
-                options.ClientId = "419709762966-scckv7qb9rnpdq6uh3bp60cgncminv2h.apps.googleusercontent.com";
-                options.ClientSecret = "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";
+                options.ClientId = configuration["GoogleAPI:ClientId"];
+                options.ClientSecret = configuration["GoogleAPI:ClientSecret"];
                 options.CallbackPath = "/signin-google";
+                options.SaveTokens = true;
+
             }).AddCookie(options => 
             {
                 options.LoginPath = "/Auth/Login";
                 options.AccessDeniedPath = "/Auth/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.Cookie.SameSite = SameSiteMode.Lax;
             });
 
             services.AddHttpContextAccessor();
@@ -50,10 +55,7 @@ namespace Infrastructure
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<ITransactionsRepository, TransactionsRepository>();
-            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-            services.AddScoped<IIconsRepository, IconsRepository>();
-            
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();      
         }
         public static void MigrateDatabase(IServiceProvider serviceProvider)
         {

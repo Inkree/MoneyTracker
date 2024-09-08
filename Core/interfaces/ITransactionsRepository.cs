@@ -17,6 +17,8 @@ namespace Core.interfaces
         public Task<Transaction?> GetByIdAsync(string id);
         public Task<IEnumerable<Transaction>> GetAllAsync();
         public Task<IEnumerable<Transaction?>> GetByUserIdAsync(string userId);
+        public Task<List<CategoryExpense>> GetTotalSpentByAllCategoriesAsync(DateTime startDate, DateTime endDate);
+        public IEnumerable<Transaction> Find(string name);
 
     }
 }

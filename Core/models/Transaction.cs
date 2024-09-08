@@ -11,19 +11,22 @@ namespace Core.models
     {
         public Transaction() {
             Note = string.Empty;
+            Hashtag = string.Empty;
             CategoryId = string.Empty;
             UserId = string.Empty;
        
         }
-        public Transaction(string note, decimal ammount,string userId,string categoryId)
+        public Transaction(string note,string hashtag, decimal ammount,string userId,string categoryId)
         {
             Amount = ammount;
             Note = note;
+            Hashtag = hashtag;
             UserId = userId;
             CategoryId = categoryId;
         }
         
-        public string Note { get; set; }
+        public string? Note { get; set; }
+        public string? Hashtag { get; set; }
         public decimal Amount { get; set; }
         public string CategoryId { get; set; }
         public Category? Category { get; set; }

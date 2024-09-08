@@ -1,0 +1,33 @@
+﻿@using ViewModels.Transactions;
+@using Pages.Shared;
+@model IndexTransactionViewModel;
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-12"></div>
+    <div class="col-lg-8 col-md-8 col-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
+        <div class="content flex-grow-1">
+            <div class="header text-center d-flex justify-content-center m-3">                
+                <p class="fs-4">Settings</p>
+            </div>         
+            <div class="categories mt-1 p-4">
+                <div onclick="window.location.href='@Url.Action("Index", "Category")'" class="category mt-3">
+                    <div class="icon-item"> <i class="fa fa-adjust" aria-hidden="true"></i>  </div>
+                    <p style="color:#e6e2e9" class="fs-5 m-1 category-name"> Categories</p>
+                </div>
+                <hr />
+            </div>
+           
+              
+            </div>
+        @await Html.PartialAsync("AuthFooter", new AuthFooterModel())
+        </div>
+       
+    </div>
+    <div class="col-lg-2 col-md-2 col-12"></div>
+</div>
+
+

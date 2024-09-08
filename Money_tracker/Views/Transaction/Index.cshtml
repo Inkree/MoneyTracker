@@ -11,12 +11,14 @@
     <div class="col-lg-8 col-md-8 col-12 main-column p-0 d-flex flex-column justify-content-between min-vh-100">
         <div class="content flex-grow-1">
             <div class="header text-center d-flex justify-content-between m-3">
-                <i class="bi bi-search"></i>
+                <i style="cursor:pointer" class="bi bi-search searchBtn"></i>
                 <p class="fs-4">Your balance</p>
-                <i class="bi bi-brightness-high-fill"></i>
-
+                <a style="color:#ffff" asp-action="Settings"><i class="fa fa-cog" aria-hidden="true"></i></a>
             </div>
-            <div class="balance text-center mt-5">
+            <div class="search-container mx-2 mt-2">
+                <input style="" placeholder="Search.." class="search-input form-control px-3 " />
+            </div>
+            <div class="balance text-center mt-4">
                 <div class="current-balance">
                     <h2>@Model.Balance</h2>
                 </div>
@@ -31,9 +33,10 @@
                     </div>
                     @foreach(var transaction in group)
                     {
-                        <div style="display:flex;justify-content:space-between" class="transaction mt-4 mx-4">
+                            <div onclick="window.location.href='@Url.Action("GetTransaction", "Transaction", new { id = transaction.Id })'"
+                                style="display:flex;justify-content:space-between" class="transaction mt-4 mx-4">
                             <div class="category fw-bolder">
-                                <div class="icon-item" style="fill:@transaction.Category.Color"> 
+                                <div class="icon-item"  style="fill:@transaction.Category.Color"> 
                                     @Html.Raw(transaction.Category.SvgContent)                                                   
                                 </div>
                                
@@ -64,5 +67,72 @@
         color:dimgrey;
     }
 
-    
+    .search-container{
+        
+        display: none;
+    }
+
+    .search-input{
+        background: #29272f;
+        border-color: #29272f;
+    }
+
+
 </style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        let typingTimer;  
+        const typingDelay = 500;
+        let originalContent = $('.transactions-cards').html();
+        $('.searchBtn').on('click', function () {
+            $('.search-input').val("");
+            var container = $('.transactions-cards').html(originalContent);
+            var searchElement = $('.search-container');
+            $('.search-container').slideToggle(300);
+        });
+        $('.search-input').on('input', function () {
+            clearTimeout(typingTimer);
+            var name = $(this).val();
+            if (name != "") {
+                typingTimer = setTimeout(function () {
+                    $.ajax({
+                        url: '/Transaction/Find',
+                        type: 'GET',
+                        data: { name: name },
+                        success: function (data) {
+                            renderTransactions(data);
+                        }
+                    });
+                }, typingDelay);
+            }else{
+                var container = $('.transactions-cards').html(originalContent);
+            }
+        })
+
+
+
+        function renderTransactions(transactions) {
+            var container = $('.transactions-cards');
+            container.empty();
+
+            transactions.forEach(function (transaction) {
+                var transactionHtml = `
+                    <div onclick="window.location.href='/Transaction/GetTransaction/${transaction.id}'"
+                         style="display:flex;justify-content:space-between" class="transaction mt-4 mx-4">
+                        <div class="category fw-bolder">
+                            <div class="icon-item" style="fill:${transaction.category.color}">
+                                ${transaction.category.svgContent}
+                            </div>
+                            <p style="margin:0">${transaction.category.name}</p>
+                        </div>
+                        <div class="sum fw-bolder mt-1">${transaction.amount}</div>
+                    </div>
+                `;
+
+                container.append(transactionHtml);
+
+            });
+        }
+    });
+</script>

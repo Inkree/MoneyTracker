@@ -13,8 +13,7 @@ namespace Application
     {
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ITransactionsService,TransactionsService>();
-            services.AddScoped<IIconsService,IconsService>();
+            services.AddScoped<ITransactionsService,TransactionsService>();           
             services.AddScoped<ICategoriesService,CategoriesService>();
         }
     }
