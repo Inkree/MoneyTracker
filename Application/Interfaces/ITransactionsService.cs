@@ -8,8 +8,6 @@ namespace Application.Interfaces
     {
         public Task Create(Transaction transaction);
         public Task<Transaction?> GetByIdAsync(string id);
-        public bool Delete(string id);
-        public Transaction Edit(string id,Transaction transaction);
         public Task<IEnumerable<Transaction?>> GetAllByUserId(string userId);
         public Task<List<IGrouping<DateTime, Transaction?>>> GetGroupedTransactionsByUserId(string userId);
         public Task<decimal> GetUserBalance(string userId);

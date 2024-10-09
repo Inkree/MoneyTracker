@@ -20,16 +20,6 @@ namespace Application.services
           await _repository.AddAsync(category);
         }
 
-        public async Task DeleteAsync(string id)
-        {
-           await _repository.DeleteAsync(id);
-        }
-
-        public Category Edit(string id, Category transaction)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Category?>> GetAllByUserIdAsync(string userId)
         {
             return await _repository.GetAllByUserIdAsync(userId);

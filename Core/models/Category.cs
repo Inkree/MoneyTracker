@@ -25,7 +25,6 @@ namespace Core.models
         public string Color { get; set; }
         public string? UserId { get; set; }
         public string SvgContent { get; set; }
-        [JsonIgnore]
         public IEnumerable<Transaction>? Transactions { get; set; }
         string? IAuditableEntity.CreatedBy { get; set; }
         string? IAuditableEntity.lastModifiedBy { get; set; }

@@ -33,11 +33,6 @@ namespace Application.services
             await _transactionsRepository.DeleteAsync(id);
         }
 
-        public Transaction Edit(string id, Transaction transaction)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Transaction?>> GetAllByUserId(string userId)
         {
             return await _transactionsRepository.GetByUserIdAsync(userId);
@@ -54,10 +49,6 @@ namespace Application.services
             return groupedTransactions;
         }
 
-        bool ITransactionsService.Delete(string id)
-        {
-            throw new NotImplementedException();
-        }
         public async Task<decimal> GetUserBalance(string userId)
         {
             var transactions = await _transactionsRepository.GetByUserIdAsync(userId);
